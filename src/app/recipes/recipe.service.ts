@@ -2,13 +2,15 @@ import { Injectable } from '@angular/core';
 import { Recipe } from './recipe.model';
 import { Ingredient } from '../shared/ingredient.model';
 import { ShoppingListService } from '../shopping-list/shopping-list.service';
+import { Subject } from 'rxjs/Subject';
 
 
 @Injectable()
 export class RecipeService {
+  public recipesChanged = new Subject();
+
   private recipes: Recipe[] = [
     new Recipe(
-      1,
       'Tasty Schnitzel',
       'A super-tasty Schnitzel - just awesome!',
       'https://upload.wikimedia.org/wikipedia/commons/7/72/Schnitzel.JPG',
@@ -17,7 +19,6 @@ export class RecipeService {
         new Ingredient('French Fries', 20)
       ]),
     new Recipe(
-      2,
       'Big Fat Burger',
       'What else you need to say?',
       'https://upload.wikimedia.org/wikipedia/commons/b/be/Burger_King_Angus_Bacon_%26_Cheese_Steak_Burger.jpg',
@@ -38,7 +39,22 @@ export class RecipeService {
     this.shoppingListService.addIngredients(ingredients);
   }
 
-  getRecipeById(id: number) {
-    return this.recipes.find((recipe: Recipe) => recipe.id === id);
+  getRecipeByIdx(idx: number) {
+    return this.recipes[idx];
+  }
+
+  addRecipe(recipe: Recipe) {
+    this.recipes.push(recipe);
+    this.recipesChanged.next(this.getRecipes());
+  }
+
+  updateRecipe(idx: number, recipe: Recipe) {
+    this.recipes[idx] = recipe;
+    this.recipesChanged.next(this.getRecipes());
+  }
+
+  deleteRecipe(idx: number) {
+    this.recipes.splice(idx, 1);
+    this.recipesChanged.next(this.getRecipes());
   }
 }
