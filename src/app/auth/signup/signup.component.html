@@ -1,0 +1,40 @@
+<div class="row">
+  <div class="col-xs-12 col-sm-10 col-md-8 col-sm-offset-1 col-md-offset-2">
+    <form (ngSubmit)="onSignup()" #f="ngForm">
+      <div class="form-group">
+        <label for="email">Email</label>
+        <input id="email"
+               type="text"
+               class="form-control"
+               name="email"
+               #emailInput="ngModel"
+               ngModel
+               email
+               required>
+        <p class="err-msg"
+           *ngIf="emailInput.invalid && emailInput.touched && emailInput.errors.required">Email is required.</p>
+        <p class="err-msg"
+           *ngIf="emailInput.invalid && emailInput.touched && emailInput.value && emailInput.errors.email">Please enter
+          a valid email.</p>
+      </div>
+      <div class="form-group">
+        <label for="password"></label>
+        <input id="password"
+               type="password"
+               class="form-control"
+               name="password"
+               #passwordInput="ngModel"
+               ngModel
+               required
+               minlength="6">
+        <p class="err-msg"
+           *ngIf="passwordInput.invalid && passwordInput.touched && passwordInput.errors.required">Password is
+          required.</p>
+        <p class="err-msg"
+           *ngIf="passwordInput.invalid && passwordInput.touched && passwordInput.value && passwordInput.errors.minlength">
+          Email must be at least 6 characters long.</p>
+      </div>
+      <button type="submit" [disabled]="f.invalid" class="btn btn-primary">Sign Up</button>
+    </form>
+  </div>
+</div>

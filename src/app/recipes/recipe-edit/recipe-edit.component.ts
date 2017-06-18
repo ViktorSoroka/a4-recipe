@@ -30,7 +30,7 @@ export class RecipeEditComponent implements OnInit {
     });
   }
 
-  initForm() {
+  public initForm() {
     let recipeName = '';
     let recipeDescription = '';
     let imagePath = '';
@@ -65,7 +65,7 @@ export class RecipeEditComponent implements OnInit {
     });
   }
 
-  onAddIngredient() {
+  public onAddIngredient() {
     (<FormArray>this.recipeForm.get('recipe-ingredients')).push(
       new FormGroup({
         'name': new FormControl(null, Validators.required),
@@ -77,11 +77,11 @@ export class RecipeEditComponent implements OnInit {
     );
   }
 
-  onDeleteIngredient(idx: number) {
+  public onDeleteIngredient(idx: number) {
     (<FormArray>this.recipeForm.get('recipe-ingredients')).removeAt(idx);
   }
 
-  onSubmit() {
+  public onSubmit() {
     const recipe = new Recipe(
       this.recipeForm.value['recipe-name'],
       this.recipeForm.value['recipe-description'],

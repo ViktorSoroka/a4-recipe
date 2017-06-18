@@ -3,19 +3,28 @@
     <div class="navbar-header">
       <a [routerLink]="['/']" class="navbar-brand">Recipe book</a>
     </div>
-    <div class="navbar-default">
-      <ul class="nav navbar-nav">
-        <li routerLinkActive="active"><a [routerLink]="['recipes']">Recipes</a></li>
-        <li routerLinkActive="active"><a [routerLink]="['shopping-list']">Shopping List</a></li>
-      </ul>
+    <div class="navbar-default" [ngSwitch]="isAuthenticated">
+      <ng-template [ngSwitchCase]="true">
+        <ul class="nav navbar-nav">
+          <li routerLinkActive="active"><a [routerLink]="['recipes']">Recipes</a></li>
+          <li routerLinkActive="active"><a [routerLink]="['shopping-list']">Shopping List</a></li>
+        </ul>
+      </ng-template>
       <ul class="nav navbar-nav navbar-right">
-        <li class="dropdown" appDropdown>
-          <a class="dropdown-toggle" role="button">Manage <span class="caret"></span></a>
-          <ul class="dropdown-menu">
-            <li><a>Save Date</a></li>
-            <li><a>Fetch Data</a></li>
-          </ul>
-        </li>
+        <ng-template [ngSwitchCase]="false">
+          <li routerLinkActive="active"><a [routerLink]="['signup']">Sign Up</a></li>
+          <li routerLinkActive="active"><a [routerLink]="['signin']">Sign In</a></li>
+        </ng-template>
+        <ng-template [ngSwitchCase]="true">
+          <li class="dropdown" appDropdown>
+            <a class="dropdown-toggle" role="button">Manage <span class="caret"></span></a>
+            <ul class="dropdown-menu">
+              <li><a (click)="onSave()">Save Data</a></li>
+              <li><a (click)="onFetch()">Fetch Data</a></li>
+            </ul>
+          </li>
+          <li routerLinkActive="active"><a (click)="onSignout()">Sign Out</a></li>
+        </ng-template>
       </ul>
     </div>
   </div>

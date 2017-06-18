@@ -18,19 +18,20 @@ export class RecipeDetailComponent implements OnInit {
               private router: Router) {
   }
 
-  ngOnInit() {
+  public ngOnInit() {
     this.route.params.subscribe((params: Params) => {
       this.id = JSON.parse(params['id']);
       this.recipe = this.recipeService.getRecipeByIdx(this.id);
     });
   }
 
-  onAddToShoppingList() {
+  public onAddToShoppingList() {
     this.recipeService.addIngredientsToShoppingList(this.recipe.ingredients);
   }
 
-  onDelete() {
-    this.recipeService.deleteRecipe(this.id);
-    this.router.navigate(['/recipes']);
+  public onDelete() {
+    this.recipeService.deleteRecipe(this.id).subscribe(() => {
+      this.router.navigate(['/recipes']);
+    });
   }
 }
