@@ -1,17 +1,16 @@
 import { Injectable } from '@angular/core';
-import { CanActivate, ActivatedRouteSnapshot, RouterStateSnapshot, Router } from '@angular/router';
+import { CanActivate, ActivatedRouteSnapshot, RouterStateSnapshot, Router, CanLoad, Route } from '@angular/router';
 import { Observable } from 'rxjs/Observable';
 
 import { AuthService } from './auth.service';
 
 
 @Injectable()
-export class AuthGuard implements CanActivate {
+export class AuthGuard implements CanActivate, CanLoad {
   constructor(private authService: AuthService, private router: Router) {
   }
 
-  canActivate(next: ActivatedRouteSnapshot,
-              state: RouterStateSnapshot): Observable<boolean> | Promise<boolean> | boolean {
+  public isAuthenticated() {
     const ls = window.localStorage;
 
     if (this.authService.isFirstPageLoad) {
@@ -38,5 +37,16 @@ export class AuthGuard implements CanActivate {
     }
 
     return isAuthenticated;
+  }
+
+  canLoad(route: Route): Observable<boolean> | Promise<boolean> | boolean {
+    console.log('canLoad');
+    return this.isAuthenticated();
+  }
+
+  canActivate(next: ActivatedRouteSnapshot,
+              state: RouterStateSnapshot): Observable<boolean> | Promise<boolean> | boolean {
+    console.log('canActivate');
+    return this.isAuthenticated();
   }
 }

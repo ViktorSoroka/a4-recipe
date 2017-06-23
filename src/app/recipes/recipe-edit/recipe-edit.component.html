@@ -1,4 +1,4 @@
-<div class="row" *ngIf="!isEditMode || recipe">
+<div class="row" *ngIf="!isEditMode || !!recipe">
   <div class="col-xs-12">
     <form [formGroup]="recipeForm" (ngSubmit)="onSubmit()">
       <div class="row">
@@ -53,7 +53,7 @@
       <div class="row" formArrayName="recipe-ingredients">
         <div class="col-xs-12">
           <div class="row"
-               *ngFor="let ingredient of recipeForm.get('recipe-ingredients').controls; let i = index"
+               *ngFor="let ingredient of getControls(); let i = index"
                [formGroupName]="i"
                style="margin-top: 10px">
             <div class="col-xs-8">

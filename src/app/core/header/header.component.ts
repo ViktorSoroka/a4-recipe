@@ -1,11 +1,11 @@
 import { Component } from '@angular/core';
-import { RecipeService } from '../recipes/recipe.service';
-import { AuthService } from '../auth/auth.service';
+import { RecipeService } from '../../recipes/recipes.service';
+import { AuthService } from '../../auth/auth.service';
 
 
 @Component({
   selector: 'app-header',
-  styleUrls: ['header.component.css'],
+  styleUrls: ['./header.component.css'],
   templateUrl: './header.component.html'
 })
 export class HeaderComponent {

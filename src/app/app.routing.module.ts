@@ -1,20 +1,33 @@
-import { NgModule } from '@angular/core';
-import { RouterModule, Routes } from '@angular/router';
+import { ModuleWithProviders } from '@angular/core';
+import { PreloadAllModules, RouterModule, Routes } from '@angular/router';
 
-import { ShoppingListComponent } from './shopping-list/shopping-list.component';
 import { PageNotFoundComponent } from './page-not-found/page-not-found.component';
 import { AuthGuard } from './auth/auth.guard';
 
 
-const appRoutes: Routes = [
-  {path: 'shopping-list', component: ShoppingListComponent, canActivate: [AuthGuard]},
-  {path: '', pathMatch: 'full', redirectTo: '/recipes'},
-  {path: '**', component: PageNotFoundComponent},
+const routes: Routes = [
+  {
+    path: 'shopping-list',
+    loadChildren: 'app/shopping-list/shopping-list.module#ShoppingListModule',
+    canActivate: [AuthGuard]
+  },
+  {
+    path: 'recipes',
+    loadChildren: 'app/recipes/recipes.module#RecipeModule',
+    canLoad: [AuthGuard],
+    canActivate: [AuthGuard]
+  },
+  {
+    path: '',
+    pathMatch: 'full',
+    redirectTo: '/recipes'
+  },
+  {
+    path: '**',
+    component: PageNotFoundComponent
+  },
 ];
 
-@NgModule({
-  imports: [RouterModule.forRoot(appRoutes)],
-  exports: [RouterModule]
-})
-export class AppRoutingModule {
-}
+export const AppRoutingModule: ModuleWithProviders = RouterModule.forRoot(routes, {
+  preloadingStrategy: PreloadAllModules
+});
