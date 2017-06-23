@@ -13,6 +13,7 @@ import { Ingredient } from '../../shared/ingredient.model';
 })
 export class RecipeEditComponent implements OnInit {
   isEditMode = false;
+  recipe: Recipe;
   id: number;
   recipeForm: FormGroup;
 
@@ -26,22 +27,21 @@ export class RecipeEditComponent implements OnInit {
       this.id = params['id'] && JSON.parse(params['id']);
       this.isEditMode = this.id != null;
 
-      this.initForm();
+      if (this.isEditMode) {
+        this.recipeService.fetchRecipeById(this.id).subscribe((recipe) => {
+          this.recipe = recipe;
+          this.initForm(this.recipe);
+        });
+      } else {
+        this.initForm();
+      }
     });
   }
 
-  public initForm() {
-    let recipeName = '';
-    let recipeDescription = '';
-    let imagePath = '';
+  public initForm(recipe: Recipe = new Recipe('', '', '', [])) {
     const recipeIngredients = new FormArray([]);
 
     if (this.isEditMode) {
-      const recipe: Recipe = this.recipeService.getRecipeByIdx(this.id);
-
-      recipeName = recipe.name;
-      imagePath = recipe.imagePath;
-      recipeDescription = recipe.description;
       if (recipe.ingredients) {
         recipe.ingredients.forEach((ingredient: Ingredient) => {
           recipeIngredients.push(
@@ -58,9 +58,9 @@ export class RecipeEditComponent implements OnInit {
 
     // todo: move strings to variables
     this.recipeForm = new FormGroup({
-      'recipe-name': new FormControl(recipeName, Validators.required),
-      'image-path': new FormControl(imagePath, Validators.required),
-      'recipe-description': new FormControl(recipeDescription, Validators.required),
+      'recipe-name': new FormControl(recipe.name, Validators.required),
+      'image-path': new FormControl(recipe.imagePath, Validators.required),
+      'recipe-description': new FormControl(recipe.description, Validators.required),
       'recipe-ingredients': recipeIngredients
     });
   }

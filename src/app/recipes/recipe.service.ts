@@ -56,10 +56,6 @@ export class RecipeService {
     this.shoppingListService.addIngredients(ingredients);
   }
 
-  public getRecipeByIdx(idx: number): Recipe {
-    return this.recipes[idx];
-  }
-
   public addRecipe(recipe: Recipe) {
     this.recipes.push(recipe);
     this.recipesChanged.next(this.getRecipes());
@@ -68,6 +64,13 @@ export class RecipeService {
   public updateRecipe(idx: number, recipe: Recipe) {
     this.recipes[idx] = recipe;
     this.recipesChanged.next(this.getRecipes());
+  }
+
+  public fetchRecipeById(id) {
+    const token = this.authService.getToken();
+
+    return this.http.get(`${this.url}/${id}.json?auth=${token}`)
+      .map(res => res.json());
   }
 
   public deleteRecipe(id) {
