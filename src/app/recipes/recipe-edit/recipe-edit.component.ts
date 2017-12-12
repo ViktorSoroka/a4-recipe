@@ -28,7 +28,7 @@ export class RecipeEditComponent implements OnInit {
       this.isEditMode = this.id != null;
 
       if (this.isEditMode) {
-        this.recipeService.fetchRecipeById(this.id).subscribe((recipe) => {
+        this.recipeService.fetchRecipeById(this.id).subscribe((recipe: Recipe) => {
           this.recipe = recipe;
           this.initForm(this.recipe);
         });

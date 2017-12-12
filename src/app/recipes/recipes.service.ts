@@ -1,11 +1,11 @@
 import { Injectable } from '@angular/core';
 import { Subject } from 'rxjs/Subject';
-import { Http } from '@angular/http';
 import { Observable } from 'rxjs/Observable';
 
 import { Recipe } from './recipe.model';
 import { Ingredient } from '../shared/ingredient.model';
 import { ShoppingListService } from '../shopping-list/shopping-list.service';
+import { HttpClient, HttpParams } from '@angular/common/http';
 
 import 'rxjs/Rx';
 import { AuthService } from '../auth/auth.service';
@@ -17,27 +17,22 @@ export class RecipeService {
   public recipesChanged = new Subject();
   private recipes: Recipe[];
 
-  constructor(private http: Http,
+  constructor(private http: HttpClient,
               private shoppingListService: ShoppingListService,
               private authService: AuthService) {
   }
 
   public saveRecipes(): Observable<any> {
-    const token = this.authService.getToken();
-
-    return this.http.put(`${this.url}.json?auth=${token}`, this.getRecipes());
+    return this.http.put(`${this.url}.json`, this.getRecipes());
   }
 
   public fetchRecipes() {
-    const token = this.authService.getToken();
-
-    return this.http.get(`${this.url}.json?auth=${token}`)
-      .map((response) => response.json())
-      .map((recipes: any[]) => recipes.map((item) => {
+    return this.http.get<Recipe[]>(`${this.url}.json`)
+      .map((recipes) => recipes ? recipes.map((item) => {
         item.ingredients = item.ingredients || [];
 
         return item;
-      }))
+      }) : [])
       .subscribe((recipes: Recipe[]) => {
         this.setRecipes(recipes);
       });
@@ -67,16 +62,11 @@ export class RecipeService {
   }
 
   public fetchRecipeById(id) {
-    const token = this.authService.getToken();
-
-    return this.http.get(`${this.url}/${id}.json?auth=${token}`)
-      .map(res => res.json());
+    return this.http.get(`${this.url}/${id}.json`);
   }
 
   public deleteRecipe(id) {
-    const token = this.authService.getToken();
-
-    return this.http.delete(`${this.url}/${id}.json?auth=${token}`).do(() => {
+    return this.http.delete(`${this.url}/${id}.json`).do(() => {
       this.recipes.splice(id, 1);
       this.recipesChanged.next(this.getRecipes());
     });
