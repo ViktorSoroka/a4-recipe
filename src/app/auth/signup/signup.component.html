@@ -12,9 +12,9 @@
                email
                required>
         <p class="err-msg"
-           *ngIf="emailInput.invalid && emailInput.touched && emailInput.errors.required">Email is required.</p>
+           *ngIf="emailInput.invalid && emailInput.touched && emailInput?.errors.required">Email is required.</p>
         <p class="err-msg"
-           *ngIf="emailInput.invalid && emailInput.touched && emailInput.value && emailInput.errors.email">Please enter
+           *ngIf="emailInput.invalid && emailInput.touched && emailInput.value && emailInput?.errors.email">Please enter
           a valid email.</p>
       </div>
       <div class="form-group">
@@ -28,10 +28,10 @@
                required
                minlength="6">
         <p class="err-msg"
-           *ngIf="passwordInput.invalid && passwordInput.touched && passwordInput.errors.required">Password is
+           *ngIf="passwordInput.invalid && passwordInput.touched && passwordInput?.errors.required">Password is
           required.</p>
         <p class="err-msg"
-           *ngIf="passwordInput.invalid && passwordInput.touched && passwordInput.value && passwordInput.errors.minlength">
+           *ngIf="passwordInput.invalid && passwordInput.touched && passwordInput.value && passwordInput?.errors.minlength">
           Email must be at least 6 characters long.</p>
       </div>
       <button type="submit" [disabled]="f.invalid" class="btn btn-primary">Sign Up</button>

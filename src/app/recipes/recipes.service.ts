@@ -1,14 +1,12 @@
 import { Injectable } from '@angular/core';
 import { Subject } from 'rxjs/Subject';
 import { Observable } from 'rxjs/Observable';
+import { HttpClient } from '@angular/common/http';
+
 
 import { Recipe } from './recipe.model';
-import { Ingredient } from '../shared/ingredient.model';
-import { ShoppingListService } from '../shopping-list/shopping-list.service';
-import { HttpClient, HttpParams } from '@angular/common/http';
 
 import 'rxjs/Rx';
-import { AuthService } from '../auth/auth.service';
 
 
 @Injectable()
@@ -17,9 +15,7 @@ export class RecipeService {
   public recipesChanged = new Subject();
   private recipes: Recipe[];
 
-  constructor(private http: HttpClient,
-              private shoppingListService: ShoppingListService,
-              private authService: AuthService) {
+  constructor(private http: HttpClient) {
   }
 
   public saveRecipes(): Observable<any> {
@@ -47,10 +43,6 @@ export class RecipeService {
     this.recipesChanged.next(this.getRecipes());
   }
 
-  public addIngredientsToShoppingList(ingredients: Ingredient[]) {
-    this.shoppingListService.addIngredients(ingredients);
-  }
-
   public addRecipe(recipe: Recipe) {
     this.recipes.push(recipe);
     this.recipesChanged.next(this.getRecipes());
@@ -62,7 +54,8 @@ export class RecipeService {
   }
 
   public fetchRecipeById(id) {
-    return this.http.get(`${this.url}/${id}.json`);
+    return this.http.get(`${this.url}/${id}.json`)
+      .map((recipe) => recipe ? { ingredients: [], ...recipe } : recipe);
   }
 
   public deleteRecipe(id) {
